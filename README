@@ -1,0 +1,11 @@
+You'll need to have Maven (http://maven.apache.org/) installed to build.
+
+To build:
+	> mvn package
+	
+To use:
+    Either copy target\4store-client-1.0.jar to your classpath or mvn install to your repo
+	See src/examples
+	
+	
+	
