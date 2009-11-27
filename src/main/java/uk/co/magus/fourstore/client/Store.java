@@ -267,7 +267,25 @@ public class Store {
 	 */
 	public String query(String sparql) throws MalformedURLException,
 			ProtocolException, IOException {
-		return query(sparql, OutputFormat.SPARQL_XML);
+			//Integer.MIN_VALUE means no soft-limit specified
+		return query(sparql, OutputFormat.SPARQL_XML, Integer.MIN_VALUE);
+	}
+	
+	/**
+	 * Queries the repository
+	 * 
+	 * @param sparql
+	 * @param softLimit
+	 * @return the result in SparQL-XML - could be rewritten to pass back a
+	 *         proper Document
+	 * @throws MalformedURLException
+	 * @throws ProtocolException
+	 * @throws IOException
+	 */
+	public String query(String sparql, int softLimit) throws MalformedURLException,
+			ProtocolException, IOException {
+			//Integer.MIN_VALUE means no soft-limit specified
+		return query(sparql, OutputFormat.SPARQL_XML, softLimit);
 	}
 
 	/**
@@ -282,6 +300,23 @@ public class Store {
 	 */
 	public String query(String sparql, OutputFormat format)
 			throws MalformedURLException, ProtocolException, IOException {
+			//Integer.MIN_VALUE means no soft-limit specified
+		return query(sparql, format, Integer.MIN_VALUE);
+	}
+
+	/**
+	 * Queries the repository and returns the result in the requested format
+	 * 
+	 * @param sparql
+	 * @param format
+	 * @param softLimit
+	 * @return the result in the requested format
+	 * @throws MalformedURLException
+	 * @throws ProtocolException
+	 * @throws IOException
+	 */
+	public String query(String sparql, OutputFormat format, int softLimit)
+			throws MalformedURLException, ProtocolException, IOException {
 		HttpURLConnection connection = (HttpURLConnection) sparqlURL
 				.openConnection();
 
@@ -293,12 +328,18 @@ public class Store {
 		connection.setRequestProperty("Accept", format.getMimeType());
 
 		DataOutputStream ps = new DataOutputStream(connection.getOutputStream());
-		ps.writeBytes("&query=" + URLEncoder.encode(sparql, "UTF-8"));
+		if(softLimit != Integer.MIN_VALUE){  //a soft limit has been set
+			ps.writeBytes("&query=" + URLEncoder.encode(sparql, "UTF-8") + "&soft-limit=" + softLimit);
+		} else {  //no soft limit specified
+			ps.writeBytes("&query=" + URLEncoder.encode(sparql, "UTF-8"));
+		}
 		ps.flush();
 		ps.close();
 
 		return readResponse(connection);
 	}
+
+
 
 	private String readResponse(HttpURLConnection connection) 
 	          throws MalformedURLException, ProtocolException, IOException {

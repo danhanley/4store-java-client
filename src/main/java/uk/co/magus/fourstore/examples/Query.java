@@ -41,11 +41,19 @@ public class Query {
 		Store store;
 		try {
 			System.out.println("Start");
-			store = new Store("http://localhost:8080");
+			store = new Store("http://193.131.98.57:8080");
+			//simple query
 			String response1 = store.query(sparql);
-			String response2 = store.query(sparql,Store.OutputFormat.JSON);
 			System.out.println(response1);
+			//specifying outputformat
+			String response2 = store.query(sparql,Store.OutputFormat.JSON);
 			System.out.println(response2);
+			//specifying softlimit and default output format
+			String response3 = store.query(sparql,5);
+			System.out.println(response3);
+			//specifying outputformat and soft limit
+			String response4 = store.query(sparql,Store.OutputFormat.TAB_SEPARATED, 1);
+			System.out.println(response4);
 			System.out.println("Done");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
