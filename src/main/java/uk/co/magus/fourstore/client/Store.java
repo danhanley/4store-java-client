@@ -349,7 +349,7 @@ public class Store {
 		String response = "";
 		String str;
 		while (null != ((str = in.readLine()))) {
-			response += str;
+			response += str + System.getProperty("line.separator"); 
 		}
 		in.close();
 		return response;
