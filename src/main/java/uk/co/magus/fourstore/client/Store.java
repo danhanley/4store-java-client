@@ -346,13 +346,13 @@ public class Store {
 		BufferedReader in = new BufferedReader(new InputStreamReader(connection
 				.getInputStream()));
 
-		String response = "";
+		StringBuilder responseBuilder = new StringBuilder();
 		String str;
 		while (null != ((str = in.readLine()))) {
-			response += str + System.getProperty("line.separator"); 
+			responseBuilder.append(str + System.getProperty("line.separator")); 
 		}
 		in.close();
-		return response;
+		return responseBuilder.toString();
 	}
 	
 	private String readResponse(URL u) throws IOException {
